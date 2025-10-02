@@ -1,0 +1,143 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+
+export default function Home() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    
+    // SIMPLE LOGIN - WE'LL MAKE IT SECURE LATER
+    let userRole = 'WORKER';
+    
+    // ONLY YOUR EMAIL GETS CEO ACCESS
+    if (email === 'izaz@audenyx.com' || email === 'ceo@audenyx.com') {
+      userRole = 'CEO';
+    }
+
+    // Save user to browser storage
+    const userData = {
+      email: email,
+      name: email.split('@')[0],
+      role: userRole,
+      loginTime: new Date().toISOString()
+    };
+    
+    localStorage.setItem('user', JSON.stringify(userData));
+    
+    // Redirect based on role
+    if (userRole === 'CEO') {
+      router.push('/ceo-dashboard');
+    } else {
+      router.push('/worker-dashboard');
+    }
+  };
+
+  return (
+    <div style={{ 
+      padding: '50px', 
+      maxWidth: '400px', 
+      margin: '0 auto', 
+      fontFamily: 'Arial',
+      backgroundColor: '#f8fafc',
+      minHeight: '100vh'
+    }}>
+      {/* AUDENYX BRANDING */}
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ color: '#1e3a8a', fontSize: '32px', margin: 0 }}>AUDENYX</h1>
+        <p style={{ color: '#6b7280', margin: '10px 0 0 0' }}>Claims Audit & Estimating Portal</p>
+      </div>
+
+      {/* LOGIN FORM */}
+      <div style={{ 
+        backgroundColor: 'white', 
+        padding: '30px', 
+        borderRadius: '10px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+      }}>
+        <h2 style={{ textAlign: 'center', marginBottom: '30px', color: '#374151' }}>Portal Login</h2>
+        
+        <form onSubmit={handleLogin}>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#374151' }}>
+              Email Address
+            </label>
+            <input 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ 
+                width: '100%', 
+                padding: '12px', 
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
+                fontSize: '16px'
+              }}
+              placeholder="your-email@audenyx.com"
+              required
+            />
+          </div>
+          
+          <div style={{ marginBottom: '25px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#374151' }}>
+              Password
+            </label>
+            <input 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{ 
+                width: '100%', 
+                padding: '12px', 
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
+                fontSize: '16px'
+              }}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          
+          <button 
+            type="submit"
+            style={{ 
+              width: '100%', 
+              padding: '12px', 
+              backgroundColor: '#1e40af',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: 'pointer'
+            }}
+          >
+            Sign In to Portal
+          </button>
+        </form>
+      </div>
+
+      {/* DEMO ACCOUNTS INFO */}
+      <div style={{ 
+        marginTop: '30px', 
+        padding: '20px', 
+        backgroundColor: '#f3f4f6', 
+        borderRadius: '8px',
+        fontSize: '14px'
+      }}>
+        <h4 style={{ margin: '0 0 10px 0', color: '#374151' }}>Demo Access:</h4>
+        <p style={{ margin: '5px 0', color: '#6b7280' }}>
+          <strong>CEO Access:</strong> izaz@audenyx.com
+        </p>
+        <p style={{ margin: '5px 0', color: '#6b7280' }}>
+          <strong>Worker Access:</strong> any other email
+        </p>
+        <p style={{ margin: '10px 0 0 0', color: '#6b7280', fontStyle: 'italic' }}>
+          Any password works for demo
+        </p>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,160 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
+export default function WorkerDashboard() {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (!userData) {
+      router.push('/');
+      return;
+    }
+    setUser(userData);
+  }, []);
+
+  if (!user) return <div>Loading...</div>;
+
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial', minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+      {/* WORKER HEADER */}
+      <header style={{ 
+        backgroundColor: '#374151', 
+        color: 'white', 
+        padding: '20px', 
+        borderRadius: '8px',
+        marginBottom: '20px'
+      }}>
+        <h1 style={{ margin: 0 }}>Audenyx Worker Portal</h1>
+        <p style={{ margin: '5px 0 0 0', opacity: 0.8 }}>
+          Welcome, {user.name} ({user.role}) - Limited Access
+        </p>
+      </header>
+
+      {/* WORKER STATS - LIMITED DATA */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(3, 1fr)', 
+        gap: '15px', 
+        marginBottom: '30px' 
+      }}>
+        <div style={{ 
+          border: '1px solid #d1d5db', 
+          padding: '20px', 
+          borderRadius: '8px',
+          backgroundColor: 'white'
+        }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#374151' }}>📥 Assigned Files</h3>
+          <p style={{ margin: 0, fontSize: '24px', fontWeight: 'bold', color: '#1e40af' }}>8</p>
+        </div>
+        <div style={{ 
+          border: '1px solid #d1d5db', 
+          padding: '20px', 
+          borderRadius: '8px',
+          backgroundColor: 'white'
+        }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#374151' }}>⏳ Pending Review</h3>
+          <p style={{ margin: 0, fontSize: '24px', fontWeight: 'bold', color: '#d97706' }}>3</p>
+        </div>
+        <div style={{ 
+          border: '1px solid #d1d5db', 
+          padding: '20px', 
+          borderRadius: '8px',
+          backgroundColor: 'white'
+        }}>
+          <h3 style={{ margin: '0 0 10px 0', color: '#374151' }}>✅ Completed Today</h3>
+          <p style={{ margin: 0, fontSize: '24px', fontWeight: 'bold', color: '#059669' }}>5</p>
+        </div>
+      </div>
+
+      {/* WORKER TOOLS - LIMITED ACCESS */}
+      <div style={{ 
+        padding: '25px', 
+        backgroundColor: 'white', 
+        borderRadius: '8px',
+        border: '1px solid #d1d5db'
+      }}>
+        <h3 style={{ margin: '0 0 20px 0', color: '#374151' }}>Your Tools</h3>
+        
+        <div style={{ 
+          padding: '15px', 
+          backgroundColor: '#fef3c7', 
+          borderRadius: '6px',
+          marginBottom: '20px'
+        }}>
+          <p style={{ margin: 0, color: '#92400e', fontSize: '14px' }}>
+            <strong>Note:</strong> Financial data and employee management are restricted to CEO only.
+          </p>
+        </div>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px' }}>
+          <button style={{ 
+            padding: '15px', 
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '16px'
+          }}>
+            📁 View Assigned Files
+          </button>
+          <button style={{ 
+            padding: '15px', 
+            backgroundColor: '#10b981',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '16px'
+          }}>
+            📤 Upload Audit Results
+          </button>
+          <button style={{ 
+            padding: '15px', 
+            backgroundColor: '#6b7280',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'not-allowed',
+            fontSize: '16px',
+            opacity: 0.5
+          }}>
+            ❌ Financial Reports
+          </button>
+          <button style={{ 
+            padding: '15px', 
+            backgroundColor: '#6b7280',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'not-allowed',
+            fontSize: '16px',
+            opacity: 0.5
+          }}>
+            ❌ Employee Management
+          </button>
+        </div>
+        
+        <button 
+          onClick={() => {
+            localStorage.removeItem('user');
+            router.push('/');
+          }}
+          style={{ 
+            marginTop: '20px',
+            padding: '10px 20px', 
+            backgroundColor: '#6b7280',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  );
+}
